@@ -2,6 +2,7 @@ from django.db import models
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 
 # Create your models here.
@@ -12,7 +13,7 @@ class PublishedManager(models.Manager):
 
 class Post(models.Model):
     title = models.CharField(max_length=250)
-    slug = models.TextField(max_length=250)
+    slug = models.TextField(max_length=250,unique_for_date= 'publish')
     body = models.TextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
@@ -37,5 +38,12 @@ class Post(models.Model):
 
     objects = models.Manager()
     published = PublishedManager()
+
     def __str__(self) -> str:
         return str(self.title)
+
+    def get_absolute_url(self):
+        return reverse("blog:post_detail", args=[self.publish.year,
+                                                 self.publish.month,
+                                                 self.publish.day,
+                                                 self.slug])
