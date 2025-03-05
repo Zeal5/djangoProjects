@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from blog.forms import EmailPostForm
+from blog.forms import EmailPostForm, CommentPostForm
 from django.core.mail import send_mail
 from blog.models import Post
 from mainSite import settings
-import json
+from django.views.decorators.http import require_POST
 
 """
 def post_list(request):
@@ -23,6 +23,24 @@ def post_list(request):
 """
 
 
+@require_POST
+def post_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comment = None
+
+    form = CommentPostForm(data=request.POST)
+
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.save()
+    return render(
+        request,
+        "blog/post/comment.xhtml",
+        {"post": post, "form": form, "comment": comment},
+    )
+
+
 class PostListView(ListView):
     template_name = "blog/post/list.xhtml"
     queryset = Post.published.all()
@@ -33,7 +51,7 @@ class PostListView(ListView):
 def post_share(request, post_id):
     sent = False
     post = get_object_or_404(Post, id=post_id)
-    
+
     if request.method == "POST":
         form = EmailPostForm(request.POST)
         if form.is_valid():
