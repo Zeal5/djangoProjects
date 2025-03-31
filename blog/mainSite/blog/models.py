@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-
+from taggit.managers import TaggableManager
 
 # Create your models here.
 class PublishedManager(models.Manager):
@@ -21,6 +21,7 @@ class Post(models.Model):
     author = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="blog_posts"
     )
+    tags = TaggableManager()
 
     class Status(models.TextChoices):
         DRAFT = "DF", "Draft"
@@ -51,7 +52,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     # post name email updated commented created active
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comment")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     body = models.TextField()
     name = models.CharField(max_length=25)
     email = models.EmailField()
