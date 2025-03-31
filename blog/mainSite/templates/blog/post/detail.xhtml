@@ -3,14 +3,52 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ post.title }}</h1>
-  <p class="date">
+<div class="mt-20 bg-gray-200 p-10">
+<h1 class="text-4xl text-red-500"><b>{{ post.title }}</b></h1>
+  <p class="text-sm font-serif text-gray-400  float-right">
     Published {{ post.publish }} by {{ post.author }}
-  </p>
-  {{ post.body|linebreaks }}
+  <p class="mt-8">
 	<p>
-	<a href="{% url "blog:post_share" post.id %}" >
+  {{ post.body|linebreaks }}
+	</p>
+	<p class="mt-8">
+	<a href="{% url "blog:post_share" post.id %}" class="text-blue-500 underline text-sm">
 		 Share this post
 	 </a>
 	</p>
-{% endblock %}
+</div>
+<div class="my-20 border border-black p-2 ">
+	<h2 class="text-3xl underline underline-offset-4 mb-10"><b>Similar posts</b></h2>
+  {% for post in similar_posts %}
+    <p class="text-blue-800">
+      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+    </p>
+  {% empty %}
+	<p class="">There are no similar posts yet.</p>
+  {% endfor %}
+	<div class="pt-10">
+  {% with comments.count as total_comments %}
+    <h2 class="mt-5 text-2xl border">
+			<b>{{ total_comments }}</b> comment{{ total_comments|pluralize }}
+    </h2>
+  {% endwith %}
+	<div class="pt-10">
+  {% for comment in comments %}
+    <div class="comment">
+      <p class="info">
+        Comment {{ forloop.counter }} by {{ comment.name }}
+        {{ comment.created }}
+      </p>
+      {{ comment.body|linebreaks }}
+    </div>
+  {% empty %}
+    <p>There are no comments yet.</p>
+  {% endfor %}
+	</div>
+	</div>
+</div>
+  {% include "blog/post/includes/comment_form.xhtml" %}
+
+
+
+{% endblock %} 

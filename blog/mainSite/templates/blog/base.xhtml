@@ -1,18 +1,22 @@
-{% load static %}
+{% load static %} {% load static tailwind_tags %}
 
 <!DOCTYPE html>
 <html>
   <head>
     <title>{% block title %}{% endblock %}</title>
-
+    {% tailwind_css %}
     <link href="{% static 'css/blog.css' %}" rel="stylesheet" />
   </head>
   <body>
-    <div id="content">{% block content %} {% endblock %}</div>
+    <div>
+      <div class="float-left w-3/4 ml-10 w-[calc(50%-10px)]">
+        {% block content %} {% endblock %}
+      </div>
 
-    <div id="sidebar">
-      <h2>My blog</h2>
-      <p>This is my blog.</p>
+      <div class="float-right w-1/4 mt-20 bg-gray-300/100  pl-2 ">
+        <h2>My blog</h2>
+        <p>This is my blog.</p>
+      </div>
     </div>
   </body>
 </html>

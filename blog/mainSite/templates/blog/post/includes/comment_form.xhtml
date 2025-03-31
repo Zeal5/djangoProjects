@@ -1,6 +1,35 @@
-<h2>Add a new comment</h2>
+
+<div class="my-10 border-black border p-5" >
+	<h2><b>Add a new comment:</b></h2>
 <form action="{% url "blog:post_comment" post.id %}" method="post">
-  {{ form.as_p }}
   {% csrf_token %}
-  <p><input type="submit" value="Add comment"></p>
+
+	    <!-- Name Field -->
+    <div class="mb-4 grid grid-cols-[150px_1fr] items-center">
+      <label for="id_name" class="text-sm font-medium text-gray-700">Your Name</label>
+      {{ form.name }}
+    </div>
+
+    <!-- Email Field -->
+    <div class="mb-4 grid grid-cols-[150px_1fr] items-center">
+      <label for="id_email" class="text-sm font-medium text-gray-700">Your Email</label>
+      {{ form.email }}
+    </div>
+
+    <!-- Body Field -->
+    <div class="mb-4 grid grid-cols-[150px_1fr] items-center">
+      <label for="id_body" class="text-sm font-medium text-gray-700">Your Comment</label>
+      {{ form.body }}
+    </div>
+
+    <!-- Submit Button -->
+		<div class="text-right">
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Add Comment
+    </button>
+		</div>
+
+
+	
 </form>
+</div>
